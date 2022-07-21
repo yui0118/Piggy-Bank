@@ -1,35 +1,57 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 自己投資貯金箱
 
-## Getting Started
+### ■ サービス概要
 
-First, run the development server:
+- 自己投資になることにお金を使ったら、それを記録していき、今までの自己投資総額が円グラフで表示されるサービス
+- 達成したい目標を書き込めるようにする(設定した目標を達成するために自己投資をするという流れ)
+- どんなことにお金を使ったのかその内容と金額、日付をフォームに入力する
+- 達成したい目標ごとに円グラフで使った金額が出るようにする(目標登録時に投資金額上限額を設定)
+- その下に横棒グラフで、目標に対するここまでの達成度を%で入力したものを表示する
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+### ■ メインのターゲットユーザー
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 自己投資のためにどれくらい投資したのかを明確にしたい人
+- 目標のために自己投資したいと考えている人
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### ■ ユーザーが抱える課題
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 自己投資したいと考えている人が、「達成したい目標に対して、いくら投資できて、実際どのくらい投資したのか」を把握しづらい。
+  ⇒ いくら投資したかを可視化することで、把握できる&モチベーションの維持にもつながるのではないか
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### ■ 実装予定の機能
 
-## Learn More
+- 自己投資金額入力機能(日付、投資金額、投資した内容(〇〇参考書を買った等))
+- 自己投資合計金額表示機能
+- twitter シェア機能(出来たらで良い)
 
-To learn more about Next.js, take a look at the following resources:
+### ■ 実装予定のページ
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 基本は、**2 ページ**で作成
+  - top ページ
+    - 目標登録フォーム(**モーダルウィンドウ**)
+  - 自己投資金額表示画面(円グラフ)
+    - 自己投資金額入力フォーム(**モーダルウィンドウ**)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### ■ どんな画面にするのか
 
-## Deploy on Vercel
+![34713291-8730-41A6-AF7D-70584540C96B.jpeg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2689b318-45a2-4c68-be99-cea5ca15517b/34713291-8730-41A6-AF7D-70584540C96B.jpeg)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![C9BD741E-BD38-41A6-AF7E-601F4E5D2CD9.jpeg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ec124579-5301-42f3-8efc-edb7dd0b041c/C9BD741E-BD38-41A6-AF7E-601F4E5D2CD9.jpeg)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# piggy_bank
+### ■ なぜこのサービスを作りたいのか？
+
+- 自己投資というと未来の確定していない目標に対してお金を支払うことであり、リスクがあるというマイナスイメージもある。しかし、自分に対してお金を支払うということはそれだけ未来の自分に対して貯金をしているような考え方もできるのではないかと思う。
+- 金額可視化サービスにすることによって、自分は「この目標に対してこれだけ使ったのだから頑張ろう」という前向きな気持ちになってもらいたい
+
+## Figma
+
+[https://www.figma.com/file/MREHIYIEWhXvDw2HQwr50y/Untitled](https://www.figma.com/file/MREHIYIEWhXvDw2HQwr50y/Untitled)
+
+## 技術スタック
+
+- バックエンド
+  - supabase([https://supabase.com/](https://supabase.com/))
+- フロントエンド
+  - Next.js
+  - Vercel
+  - TypeScript
