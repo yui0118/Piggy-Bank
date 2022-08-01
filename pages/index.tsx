@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Goals from "../components/goals";
 import Welcome from "../components/welcome";
-import { Modal } from "../components/modal";
+import Modal from "../components/modal";
 
 const Home: NextPage = () => {
   const [goals, setGoals] = useState<string[]>([]);
