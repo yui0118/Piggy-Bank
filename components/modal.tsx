@@ -23,7 +23,9 @@ export default function GoalModal({ onAddGoals }: any) {
         values.maximumAmount === undefined
           ? "使用できる金額は、入力必須項目です"
           : values.maximumAmount < 1000
-          ? "使用できる金額の入力は、1000円以上でお願いします"
+          ? "使用できる金額の入力は、1,000円以上でお願いします"
+          : values.maximumAmount > 10000000
+          ? "使用できる金額の入力上限は、10,000,000円です。"
           : null,
     }),
   });
@@ -43,6 +45,8 @@ export default function GoalModal({ onAddGoals }: any) {
           mt="md"
           label="使用できる金額(1000円以上)"
           placeholder="1000"
+          min={1000}
+          max={10000000}
           {...form.getInputProps("maximumAmount")}
         />
 
