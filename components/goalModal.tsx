@@ -1,4 +1,12 @@
-import { TextInput, Button, Group, Box, NumberInput } from "@mantine/core";
+import { useState } from "react";
+import {
+  TextInput,
+  Button,
+  Group,
+  Box,
+  NumberInput,
+  Modal,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 type Form = {
@@ -6,7 +14,13 @@ type Form = {
   maximumAmount: number;
 };
 
-export default function GoalModal({ onAddGoals }: any) {
+type Props = {
+  onAddGoals: (goal: string) => void;
+  opened: boolean;
+  onClose: (close: boolean) => void;
+};
+export default function GoalModal({ onAddGoals, opened, onClose }: Props) {
+  const [newGoal] = useState<string>("");
   const form = useForm<Form>({
     validateInputOnChange: ["newGoal", "maximumAmount"],
     initialValues: {
@@ -16,7 +30,9 @@ export default function GoalModal({ onAddGoals }: any) {
 
     validate: (values) => ({
       newGoal:
-        values.newGoal.length > 2
+        values.newGoal.length === undefined
+          ? "目標は、入力必須項目です"
+          : values.newGoal.length >= 2
           ? null
           : "目標は、2文字以上で入力してください",
       maximumAmount:
@@ -32,7 +48,16 @@ export default function GoalModal({ onAddGoals }: any) {
 
   return (
     <Box sx={{ maxWidth: 400 }} mx="auto">
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <form
+        onSubmit={form.onSubmit((values) => {
+          console.log(values);
+          // console.log(form.errors);
+          onAddGoals(newGoal);
+          form.reset;
+          onClose(false);
+          console.log("stateの中身を見てみる", newGoal);
+        })}
+      >
         <TextInput
           required
           label="目標"
@@ -51,7 +76,16 @@ export default function GoalModal({ onAddGoals }: any) {
         />
 
         <Group position="right" mt="md">
-          <Button type="submit" onClick={() => form.reset}>
+          <Button
+            type="submit"
+            variant="gradient"
+            gradient={{ from: "teal", to: "lime", deg: 105 }}
+            onClick={() => {
+              // onAddGoals(newGoal);
+              // form.reset;
+              // onClose(false);
+            }}
+          >
             保存
           </Button>
         </Group>

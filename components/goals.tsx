@@ -15,7 +15,6 @@ export default function Goals({ goals }: Props): JSX.Element {
           <button>編集</button>
         </ul>;
       })}
-      <button>トップページへ</button>
     </>
   );
 }
