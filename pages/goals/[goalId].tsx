@@ -1,6 +1,5 @@
-import React from "react";
-import { useRouter } from "next/router"; // routerオブジェクトにアクセスするためのフック
-import Link from "next/link";
+import React from 'react';
+import { useRouter } from 'next/router'; // routerオブジェクトにアクセスするためのフック
 
 export default function Goal() {
   const router = useRouter();
