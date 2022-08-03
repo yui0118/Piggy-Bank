@@ -1,13 +1,7 @@
-import { useState } from "react";
-import {
-  TextInput,
-  Button,
-  Group,
-  Box,
-  NumberInput,
-  Modal,
-} from "@mantine/core";
-import { useForm } from "@mantine/form";
+/* eslint-disable @typescript-eslint/indent */
+import { useState } from 'react';
+import { TextInput, Button, Group, Box, NumberInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
 
 type Form = {
   newGoal: string;
@@ -19,29 +13,29 @@ type Props = {
   opened: boolean;
   onClose: (close: boolean) => void;
 };
-export default function GoalModal({ onAddGoals, opened, onClose }: Props) {
-  const [newGoal] = useState<string>("");
+export default function GoalModal({ onAddGoals, onClose }: Props) {
+  const [newGoal] = useState<string>('');
   const form = useForm<Form>({
-    validateInputOnChange: ["newGoal", "maximumAmount"],
+    validateInputOnChange: ['newGoal', 'maximumAmount'],
     initialValues: {
-      newGoal: "",
+      newGoal: '',
       maximumAmount: 1000,
     },
 
     validate: (values) => ({
       newGoal:
         values.newGoal.length === undefined
-          ? "目標は、入力必須項目です"
+          ? '目標は、入力必須項目です'
           : values.newGoal.length >= 2
           ? null
-          : "目標は、2文字以上で入力してください",
+          : '目標は、2文字以上で入力してください',
       maximumAmount:
         values.maximumAmount === undefined
-          ? "使用できる金額は、入力必須項目です"
+          ? '使用できる金額は、入力必須項目です'
           : values.maximumAmount < 1000
-          ? "使用できる金額の入力は、1,000円以上でお願いします"
+          ? '使用できる金額の入力は、1,000円以上でお願いします'
           : values.maximumAmount > 10000000
-          ? "使用できる金額の入力上限は、10,000,000円です。"
+          ? '使用できる金額の入力上限は、10,000,000円です。'
           : null,
     }),
   });
@@ -53,16 +47,16 @@ export default function GoalModal({ onAddGoals, opened, onClose }: Props) {
           console.log(values);
           // console.log(form.errors);
           onAddGoals(newGoal);
-          form.reset;
+          form.reset();
           onClose(false);
-          console.log("stateの中身を見てみる", newGoal);
+          console.log('stateの中身を見てみる', newGoal);
         })}
       >
         <TextInput
           required
           label="目標"
           placeholder="達成したい目標"
-          {...form.getInputProps("newGoal")}
+          {...form.getInputProps('newGoal')}
         />
 
         <NumberInput
@@ -72,14 +66,14 @@ export default function GoalModal({ onAddGoals, opened, onClose }: Props) {
           placeholder="1000"
           min={1000}
           max={10000000}
-          {...form.getInputProps("maximumAmount")}
+          {...form.getInputProps('maximumAmount')}
         />
 
         <Group position="right" mt="md">
           <Button
             type="submit"
             variant="gradient"
-            gradient={{ from: "teal", to: "lime", deg: 105 }}
+            gradient={{ from: 'teal', to: 'lime', deg: 105 }}
             onClick={() => {
               // onAddGoals(newGoal);
               // form.reset;

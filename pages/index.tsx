@@ -1,13 +1,9 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
-import { useState } from "react";
-import Goals from "../components/goals";
-import Welcome from "../components/welcome";
-import GoalModal from "../components/goalModal";
-import { Modal, Button, Group } from "@mantine/core";
+import type { NextPage } from 'next';
+import { useState } from 'react';
+import Goals from '../components/goals';
+import Welcome from '../components/welcome';
+import GoalModal from '../components/goalModal';
+import { Modal, Button, Group } from '@mantine/core';
 
 const Home: NextPage = () => {
   const [goals, setGoals] = useState<string[]>([]);
@@ -20,7 +16,7 @@ const Home: NextPage = () => {
       <Group position="center">
         <Button
           variant="gradient"
-          gradient={{ from: "teal", to: "lime", deg: 105 }}
+          gradient={{ from: 'teal', to: 'lime', deg: 105 }}
           onClick={() => setIsModalOpen(true)}
         >
           目標を入力
