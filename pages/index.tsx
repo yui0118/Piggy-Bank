@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
 import { Modal, Button, Box } from '@mantine/core';
 import NewGoalModal from '../components/newGoalModal';
 import { Goal } from '../types/goal';
 import GoalRow from '../components/goalRow';
+import { client } from '../utils/supabaseClient';
 
 const Home = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const getGoals = async () => {
+    const res = await client.from('goal').select('*');
+    if (!!res) setGoals(res.data as Goal[]);
+  };
+
+  useEffect(() => {
+    getGoals();
+  }, []);
 
   return (
     <>
@@ -19,16 +29,19 @@ const Home = () => {
               goal={goal}
               key={i}
               onEdit={(text) => {
-                setGoals(
-                  goals.map((g2, i2) => {
-                    if (i === i2) {
-                      return { ...g2, text };
-                    }
-                    return g2;
-                  }),
-                );
+                client
+                  .from('goal')
+                  .update({ text })
+                  .match({ id: goal.id })
+                  .then(() => getGoals());
               }}
-              onDelete={() => setGoals(goals.filter((_, i2) => i !== i2))}
+              onDelete={() => {
+                client
+                  .from('goal')
+                  .delete()
+                  .match({ id: goal.id })
+                  .then(() => getGoals());
+              }}
             />
           ))}
         </Box>
@@ -37,8 +50,15 @@ const Home = () => {
       <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <NewGoalModal
           onSave={(text, budget) => {
-            setGoals([...goals, { text, budget }]);
-            setIsModalOpen(false);
+            // 書き込み通信
+            client
+              .from('goal')
+              .insert({ text, budget })
+              .then(() => {
+                // 最新のデータに更新
+                getGoals();
+                setIsModalOpen(false);
+              });
           }}
         />
       </Modal>

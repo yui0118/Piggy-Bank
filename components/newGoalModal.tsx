@@ -24,7 +24,15 @@ export default function NewGoalModal({ onSave }: Props) {
         value={budget}
         onChange={(e: any) => setBudget(e.target.value)}
       />
-      <Button onClick={() => onSave(goal, budget)}>保存</Button>
+      <Button
+        onClick={() => {
+          setGoal('');
+          setBudget(1000);
+          onSave(goal, budget);
+        }}
+      >
+        保存
+      </Button>
     </div>
   );
 }
