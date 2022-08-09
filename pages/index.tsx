@@ -5,11 +5,15 @@ import Welcome from '../components/welcome';
 import GoalModal from '../components/goalModal';
 import { Modal, Button, Group } from '@mantine/core';
 
+type Form = {
+  newGoal: string;
+  maximumAmount: number;
+};
+
 const Home: NextPage = () => {
-  const [goals, setGoals] = useState<string[]>([]);
+  const [goals, setGoals] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log(goals);
   return (
     <>
       {goals.length > 0 ? <Goals goals={goals} /> : <Welcome />}
@@ -30,7 +34,7 @@ const Home: NextPage = () => {
         <GoalModal
           opened={isModalOpen}
           onClose={(close: boolean) => setIsModalOpen(close)}
-          onAddGoals={(goal: string) => setGoals([...goals, goal])}
+          onAddGoals={(goal: Form) => setGoals([...goals, goal])}
         />
       </Modal>
     </>

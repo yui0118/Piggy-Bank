@@ -9,12 +9,15 @@ type Form = {
 };
 
 type Props = {
-  onAddGoals: (goal: string) => void;
+  onAddGoals: (goal: Form) => void;
   opened: boolean;
   onClose: (close: boolean) => void;
 };
 export default function GoalModal({ onAddGoals, onClose }: Props) {
-  const [newGoal] = useState<string>('');
+  const [newGoal, setNewGoal] = useState<Form>({
+    newGoal: '',
+    maximumAmount: 1000,
+  });
   const form = useForm<Form>({
     validateInputOnChange: ['newGoal', 'maximumAmount'],
     initialValues: {
@@ -43,13 +46,11 @@ export default function GoalModal({ onAddGoals, onClose }: Props) {
   return (
     <Box sx={{ maxWidth: 400 }} mx="auto">
       <form
-        onSubmit={form.onSubmit((values) => {
-          console.log(values);
-          // console.log(form.errors);
+        onSubmit={form.onSubmit((values: Form) => {
+          setNewGoal(values);
           onAddGoals(newGoal);
           form.reset();
           onClose(false);
-          console.log('stateの中身を見てみる', newGoal);
         })}
       >
         <TextInput
@@ -74,11 +75,6 @@ export default function GoalModal({ onAddGoals, onClose }: Props) {
             type="submit"
             variant="gradient"
             gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-            onClick={() => {
-              // onAddGoals(newGoal);
-              // form.reset;
-              // onClose(false);
-            }}
           >
             保存
           </Button>
@@ -87,40 +83,3 @@ export default function GoalModal({ onAddGoals, onClose }: Props) {
     </Box>
   );
 }
-
-// export const Modal = ({ onAddGoals }: any) => {
-//   const [newGoal, setNewGoal] = useState<string>("");
-//   const [maximumAmount, setMaximumAmount] = useState<number>(0);
-//   return (
-//     <>
-//       <form>
-//         <div>
-//           <label>達成したい目標</label>
-//         </div>
-//         <div>
-//           <input
-//             type="text"
-//             placeholder="目標を入力"
-//             value={newGoal}
-//             onChange={(e) => setNewGoal(e.target.value)}
-//           />
-//         </div>
-//         <div>
-//           <label>目標に投資できる金額</label>
-//         </div>
-//         <div>
-//           <input
-//             type="number"
-//             value={maximumAmount}
-//             onChange={(e) => {
-//               const value: number = Number(e.target.value);
-//               setMaximumAmount(value);
-//             }}
-//           />
-//         </div>
-
-//         <button onClick={() => onAddGoals(newGoal)}>目標を作成</button>
-//       </form>
-//     </>
-//   );
-// };
