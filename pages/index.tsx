@@ -1,40 +1,45 @@
-import type { NextPage } from 'next';
 import { useState } from 'react';
-import Goals from '../components/goals';
 import Welcome from '../components/welcome';
-import GoalModal from '../components/goalModal';
-import { Modal, Button, Group } from '@mantine/core';
+import { Modal, Button, Box } from '@mantine/core';
+import NewGoalModal from '../components/newGoalModal';
+import { Goal } from '../types/goal';
+import GoalRow from '../components/goalRow';
 
-type Form = {
-  newGoal: string;
-  maximumAmount: number;
-};
-
-const Home: NextPage = () => {
-  const [goals, setGoals] = useState<any[]>([]);
+const Home = () => {
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      {goals.length > 0 ? <Goals goals={goals} /> : <Welcome />}
-      <Group position="center">
-        <Button
-          variant="gradient"
-          gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-          onClick={() => setIsModalOpen(true)}
-        >
-          目標を入力
-        </Button>
-      </Group>
-      <Modal
-        opened={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="目標を入力"
-      >
-        <GoalModal
-          opened={isModalOpen}
-          onClose={(close: boolean) => setIsModalOpen(close)}
-          onAddGoals={(goal: Form) => setGoals([...goals, goal])}
+      {goals === [] && <Welcome />}
+      {goals.length > 0 && (
+        <Box>
+          {goals.map((goal, i) => (
+            <GoalRow
+              goal={goal}
+              key={i}
+              onEdit={(text) => {
+                setGoals(
+                  goals.map((g2, i2) => {
+                    if (i === i2) {
+                      return { ...g2, text };
+                    }
+                    return g2;
+                  }),
+                );
+              }}
+              onDelete={() => setGoals(goals.filter((_, i2) => i !== i2))}
+            />
+          ))}
+        </Box>
+      )}
+      <Button onClick={() => setIsModalOpen(true)}>目標を入力</Button>
+      <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <NewGoalModal
+          onSave={(text, budget) => {
+            setGoals([...goals, { text, budget }]);
+            setIsModalOpen(false);
+          }}
         />
       </Modal>
     </>
