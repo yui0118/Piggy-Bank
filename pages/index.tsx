@@ -1,36 +1,65 @@
-import type { NextPage } from 'next';
-import { useState } from 'react';
-import Goals from '../components/goals';
+import { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
-import GoalModal from '../components/goalModal';
-import { Modal, Button, Group } from '@mantine/core';
+import { Modal, Button, Box } from '@mantine/core';
+import NewGoalModal from '../components/newGoalModal';
+import { Goal } from '../types/goal';
+import GoalRow from '../components/goalRow';
+import { client } from '../utils/supabaseClient';
 
-const Home: NextPage = () => {
-  const [goals, setGoals] = useState<string[]>([]);
+const Home = () => {
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log(goals);
+  const getGoals = async () => {
+    const res = await client.from('goal').select('*');
+    if (!!res) setGoals(res.data as Goal[]);
+  };
+
+  useEffect(() => {
+    getGoals();
+  }, []);
+
   return (
     <>
-      {goals.length > 0 ? <Goals goals={goals} /> : <Welcome />}
-      <Group position="center">
-        <Button
-          variant="gradient"
-          gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-          onClick={() => setIsModalOpen(true)}
-        >
-          目標を入力
-        </Button>
-      </Group>
-      <Modal
-        opened={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="目標を入力"
-      >
-        <GoalModal
-          opened={isModalOpen}
-          onClose={(close: boolean) => setIsModalOpen(close)}
-          onAddGoals={(goal: string) => setGoals([...goals, goal])}
+      {goals === [] && <Welcome />}
+      {goals.length > 0 && (
+        <Box>
+          {goals.map((goal, i) => (
+            <GoalRow
+              goal={goal}
+              key={i}
+              onEdit={(text) => {
+                client
+                  .from('goal')
+                  .update({ text })
+                  .match({ id: goal.id })
+                  .then(() => getGoals());
+              }}
+              onDelete={() => {
+                client
+                  .from('goal')
+                  .delete()
+                  .match({ id: goal.id })
+                  .then(() => getGoals());
+              }}
+            />
+          ))}
+        </Box>
+      )}
+      <Button onClick={() => setIsModalOpen(true)}>目標を入力</Button>
+      <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <NewGoalModal
+          onSave={(text, budget) => {
+            // 書き込み通信
+            client
+              .from('goal')
+              .insert({ text, budget })
+              .then(() => {
+                // 最新のデータに更新
+                getGoals();
+                setIsModalOpen(false);
+              });
+          }}
         />
       </Modal>
     </>
