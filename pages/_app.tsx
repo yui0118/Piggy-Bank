@@ -20,6 +20,7 @@ export default function MyApp(props: AppProps) {
         withNormalizeCSS
         theme={{
           colorScheme: 'light',
+          fontFamily: 'Verdana, sans-serif',
         }}
       >
         <Component {...pageProps} />
