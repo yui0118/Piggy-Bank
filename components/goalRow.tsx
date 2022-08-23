@@ -1,7 +1,9 @@
-import { Button, Input, Group } from '@mantine/core';
+import { Button, Input, Group, Text } from '@mantine/core';
 import { useState } from 'react';
-import { Goal } from '../types/goal';
+import { Goal } from '../types/supabase';
 import { Trash, Edit, ArrowBigDownLine } from 'tabler-icons-react';
+import { useRouter } from 'next/router';
+import { Flex } from '@chakra-ui/react';
 
 type Props = {
   goal: Goal;
@@ -12,10 +14,20 @@ type Props = {
 export default function GoalRow({ goal, onDelete, onEdit }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [editingGoalText, setEditingGoalText] = useState(goal.text);
+  const router = useRouter();
   return (
     <Group position="center">
-      <div>
-        {!isEditing && goal.text}
+      <Flex
+        alignItems="center"
+        p="16px"
+        borderWidth="1px"
+        borderColor="gray.100"
+        borderRadius="4px"
+        width="400px"
+        cursor="pointer"
+        onClick={() => router.push(`/goals/${goal.id}`)}
+      >
+        {!isEditing && <Text>{goal.text}</Text>}
         {isEditing && (
           <Input
             value={editingGoalText}
@@ -60,7 +72,7 @@ export default function GoalRow({ goal, onDelete, onEdit }: Props) {
         >
           削除
         </Button>
-      </div>
+      </Flex>
     </Group>
   );
 }

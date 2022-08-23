@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
-import { Modal, Button, Box, Group } from '@mantine/core';
+import { Button, Box, Group } from '@mantine/core';
 import NewGoalModal from '../components/newGoalModal';
-import { Goal } from '../types/goal';
+import { Goal } from '../types/supabase';
 import GoalRow from '../components/goalRow';
 import { client } from '../utils/supabaseClient';
 import { PencilMinus } from 'tabler-icons-react';
@@ -10,7 +10,7 @@ import { PencilMinus } from 'tabler-icons-react';
 const Home = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  console.log(isModalOpen);
   const getGoals = async () => {
     const res = await client.from('goal').select('*');
     if (!!res) setGoals(res.data as Goal[]);
@@ -58,21 +58,21 @@ const Home = () => {
           目標を入力
         </Button>
       </Group>
-      <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <NewGoalModal
-          onSave={(text, budget) => {
-            // 書き込み通信
-            client
-              .from('goal')
-              .insert({ text, budget })
-              .then(() => {
-                // 最新のデータに更新
-                getGoals();
-                setIsModalOpen(false);
-              });
-          }}
-        />
-      </Modal>
+      {/* <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}> */}
+      <NewGoalModal
+        onSave={(text, budget) => {
+          // 書き込み通信
+          client
+            .from('goal')
+            .insert({ text, budget })
+            .then(() => {
+              // 最新のデータに更新
+              getGoals();
+              setIsModalOpen(false);
+            });
+        }}
+      />
+      {/* </Modal> */}
     </>
   );
 };
