@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import { ChakraProvider } from '@chakra-ui/react';
+import Layout from '../components/layout';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -25,7 +26,9 @@ export default function MyApp(props: AppProps) {
             fontFamily: 'Verdana, sans-serif',
           }}
         >
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </MantineProvider>
       </ChakraProvider>
     </>

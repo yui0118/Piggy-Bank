@@ -78,7 +78,7 @@ export default function Goal() {
         borderRadius="24px"
         boxShadow="xl"
         maxWidth="1200px"
-        minH="600px"
+        minH="480px"
         m="0 auto"
       >
         <Heading textAlign="center" mb="80px" size="xl">
