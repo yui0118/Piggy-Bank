@@ -1,5 +1,6 @@
-import { Button, Input, Text } from '@mantine/core';
+import { Button, Input, Text, Group } from '@mantine/core';
 import { useState } from 'react';
+import { ArrowBigDownLine } from 'tabler-icons-react';
 
 type Props = {
   onSave: (text: string, budget: number) => void;
@@ -24,15 +25,22 @@ export default function NewGoalModal({ onSave }: Props) {
         value={budget}
         onChange={(e: any) => setBudget(e.target.value)}
       />
-      <Button
-        onClick={() => {
-          setGoal('');
-          setBudget(1000);
-          onSave(goal, budget);
-        }}
-      >
-        保存
-      </Button>
+      <Group position="center" mt="md">
+        <Button
+          onClick={() => {
+            setGoal('');
+            setBudget(1000);
+            onSave(goal, budget);
+          }}
+          variant="gradient"
+          gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}
+          leftIcon={
+            <ArrowBigDownLine size={18} strokeWidth={2} color={'white'} />
+          }
+        >
+          保存
+        </Button>
+      </Group>
     </div>
   );
 }
