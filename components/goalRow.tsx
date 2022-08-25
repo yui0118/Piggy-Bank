@@ -1,9 +1,8 @@
-import { Button, Input, Group, Text } from '@mantine/core';
 import { useState } from 'react';
 import { Goal } from '../types/supabase';
-import { Trash, Edit, ArrowBigDownLine } from 'tabler-icons-react';
+import { Trash, Edit } from 'tabler-icons-react';
 import { useRouter } from 'next/router';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Button, Input, Heading } from '@chakra-ui/react';
 
 type Props = {
   goal: Goal;
@@ -16,63 +15,69 @@ export default function GoalRow({ goal, onDelete, onEdit }: Props) {
   const [editingGoalText, setEditingGoalText] = useState(goal.text);
   const router = useRouter();
   return (
-    <Group position="center">
-      <Flex
-        alignItems="center"
-        p="16px"
-        borderWidth="1px"
-        borderColor="gray.100"
-        borderRadius="4px"
-        width="400px"
-        cursor="pointer"
-        onClick={() => router.push(`/goals/${goal.id}`)}
-      >
-        {!isEditing && <Text>{goal.text}</Text>}
-        {isEditing && (
-          <Input
-            value={editingGoalText}
-            onChange={(e: any) => setEditingGoalText(e.target.value)}
-          />
-        )}
+    <Flex
+      bg="white"
+      alignItems="center"
+      justifyContent="space-between"
+      p="32px"
+      boxShadow="xl"
+      borderWidth="1px"
+      borderRadius="20px"
+      width="600px"
+      cursor="pointer"
+      onClick={() => {
+        router.push(`/goals/${goal.id}`);
+      }}
+    >
+      {!isEditing && <Heading size="md">{goal.text}</Heading>}
+      {isEditing && (
+        <Input
+          value={editingGoalText}
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => setEditingGoalText(e.target.value)}
+        />
+      )}
+      <Flex ml="24px">
         <Button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setIsEditing(!isEditing);
             setEditingGoalText(goal.text);
           }}
-          leftIcon={<Edit size={18} strokeWidth={2} color={'white'} />}
-          variant="gradient"
-          gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-          ml={10}
-          mt={5}
+          leftIcon={!isEditing ? <Edit size={18} strokeWidth={2} /> : undefined}
+          size="sm"
+          variant="outline"
+          mr="12px"
         >
           {isEditing ? 'キャンセル' : '編集'}
         </Button>
         {isEditing && (
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onEdit(editingGoalText);
               setIsEditing(false);
             }}
-            leftIcon={
-              <ArrowBigDownLine size={18} strokeWidth={2} color={'white'} />
-            }
-            variant="gradient"
-            gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-            ml={10}
+            variant="outline"
+            size="sm"
           >
             保存
           </Button>
         )}
         <Button
-          onClick={onDelete}
-          leftIcon={<Trash size={18} strokeWidth={2} color={'white'} />}
-          variant="gradient"
-          gradient={{ from: 'teal', to: 'lime', deg: 105 }}
-          ml={10}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          leftIcon={<Trash size={18} strokeWidth={2} />}
+          ml="12px"
+          variant="outline"
+          colorScheme="red"
+          size="sm"
         >
           削除
         </Button>
       </Flex>
-    </Group>
+    </Flex>
   );
 }
