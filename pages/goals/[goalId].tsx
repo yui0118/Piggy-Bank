@@ -6,26 +6,18 @@ import {
   Button,
   CircularProgress,
   Flex,
-  FormLabel,
   Heading,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   Stack,
   Text,
 } from '@chakra-ui/react';
 import { Expense, Goal as GoalType } from '../../types/supabase';
-import { Input } from '@mantine/core';
+import CreateExpenseModal from '../../components/createExpenseModal';
 
 export default function Goal() {
   const router = useRouter();
   const { goalId } = router.query;
   const [goal, setGoal] = useState<GoalType>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [expenseText, setExpenseText] = useState('');
-  const [expenseAmount, setExpenseAmount] = useState(0);
   const expenseSum =
     goal?.expense.map((e) => e.amount).reduce((v1, v2) => v1 + v2) ?? 0;
 
@@ -41,11 +33,11 @@ export default function Goal() {
     }
   }, [goalId]);
 
-  const insertExpense = async () => {
+  const insertExpense = async (text: string, amount: number) => {
     try {
       await client.from<Expense>('expense').insert({
-        text: expenseText,
-        amount: expenseAmount,
+        text,
+        amount,
         goal_id: Number(goalId),
       });
       getGoal();
@@ -156,28 +148,11 @@ export default function Goal() {
           </Box>
         </Flex>
       </Box>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody>
-            <FormLabel>内容</FormLabel>
-            <Input
-              value={expenseText}
-              onChange={(e: any) => setExpenseText(e.target.value)}
-            />
-            <FormLabel>金額</FormLabel>
-            <Input
-              type="number"
-              value={expenseAmount}
-              onChange={(e: any) => setExpenseAmount(e.target.value)}
-            />
-            円
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={insertExpense}>保存</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <CreateExpenseModal
+        isModalOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onClickSave={(text, amount) => insertExpense(text, amount)}
+      />
     </Box>
   );
 }
