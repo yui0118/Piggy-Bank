@@ -67,7 +67,8 @@ export default function GoalRow({ goal, onDelete, onEdit }: Props) {
         <Button
           onClick={(e) => {
             e.stopPropagation();
-            onDelete();
+            const shouldDelete = confirm('本当に削除しますか？');
+            if (shouldDelete) onDelete();
           }}
           leftIcon={<Trash size={18} strokeWidth={2} />}
           ml="12px"
