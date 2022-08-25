@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import Welcome from '../components/welcome';
-import { Button, Box, Group } from '@mantine/core';
 import NewGoalModal from '../components/newGoalModal';
 import { Goal } from '../types/supabase';
 import GoalRow from '../components/goalRow';
 import { client } from '../utils/supabaseClient';
-import { PencilMinus } from 'tabler-icons-react';
+import { Pencil } from 'tabler-icons-react';
+import { Box, Flex, Heading, Stack, Button, Text } from '@chakra-ui/react';
 
 const Home = () => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(isModalOpen);
   const getGoals = async () => {
-    const res = await client.from('goal').select('*');
+    const res = await client.from('goal').select('*').order('id');
     if (!!res) setGoals(res.data as Goal[]);
   };
 
@@ -21,10 +20,34 @@ const Home = () => {
   }, []);
 
   return (
-    <>
-      {goals === [] && <Welcome />}
-      {goals.length > 0 && (
-        <Box sx={{ maxWidth: 400 }} mx="auto">
+    <Box
+      bg="gray.50"
+      py="60px"
+      display="flex"
+      flexDir="column"
+      alignItems="center"
+    >
+      <Box mb="48px" w="600px">
+        <Welcome />
+      </Box>
+      <>
+        <Flex mb="32px" w="600px" justifyContent="space-between">
+          <Heading size="lg">作成した目標</Heading>
+          <Button
+            variant="outline"
+            colorScheme="blue"
+            onClick={() => setIsModalOpen(true)}
+            leftIcon={<Pencil size={18} strokeWidth={2} />}
+          >
+            目標を作成
+          </Button>
+        </Flex>
+        <Stack spacing="32px">
+          {goals.length === 0 && (
+            <Text fontSize="sm" color="gray.600">
+              まだ目標が作成されていません
+            </Text>
+          )}
           {goals.map((goal, i) => (
             <GoalRow
               goal={goal}
@@ -36,44 +59,36 @@ const Home = () => {
                   .match({ id: goal.id })
                   .then(() => getGoals());
               }}
-              onDelete={() => {
-                client
-                  .from('goal')
-                  .delete()
-                  .match({ id: goal.id })
-                  .then(() => getGoals());
+              onDelete={async () => {
+                try {
+                  await client
+                    .from('expense')
+                    .delete()
+                    .match({ goal_id: goal.id });
+                  await client.from('goal').delete().match({ id: goal.id });
+                  getGoals();
+                } catch (e) {
+                  console.error(e);
+                }
               }}
             />
           ))}
-        </Box>
-      )}
-
-      <Group position="center" mt={100}>
-        <Button
-          variant="gradient"
-          gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}
-          onClick={() => setIsModalOpen(true)}
-          leftIcon={<PencilMinus size={18} strokeWidth={2} color={'white'} />}
-        >
-          目標を入力
-        </Button>
-      </Group>
-      {/* <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)}> */}
+        </Stack>
+      </>
       <NewGoalModal
+        isModalOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         onSave={(text, budget) => {
-          // 書き込み通信
           client
             .from('goal')
             .insert({ text, budget })
             .then(() => {
-              // 最新のデータに更新
               getGoals();
               setIsModalOpen(false);
             });
         }}
       />
-      {/* </Modal> */}
-    </>
+    </Box>
   );
 };
 
